@@ -1,0 +1,36 @@
+<launch>
+
+  <!-- roslaunch smartpad smartpad.launch group:=kuka6 -->
+
+  <arg name="scene" default="false"/>
+  <arg name="scene_name" default="c201"/>
+  <arg name="group" default="kuka6"/> <!-- El "PLanning Group" del brazo de Moveit -->
+
+  <!-- Pizarra -->
+  <node name="joint_states2" pkg="smartpad" type="joint_states2.py"/>
+  <node name="whiteboard" pkg="smartpad" type="whiteboard.py" output="screen"/>
+
+  <!-- Visualizador de Puntos Guardados -->
+  <node name="plot_points" pkg="smartpad" type="plot_points.py"/>
+
+  <!-- Escena -->
+  <group if="$(arg scene)">  
+    
+    <group if="$(eval arg('scene_name') =='c201')">
+      <node name="c201" pkg="smartpad" type="c201_scene.py"/>
+    </group> 
+
+  </group>
+
+  <!-- Interfaz de Moveit -->  
+  <node name="moveit_kr6" pkg="smartpad" type="interfaz.py" output="screen">
+      <param name="Planning_Group" value="$(arg group)" />
+  </node>   
+
+  <!-- self.arucoID = rospy.get_param('/moveit_python/aruco') #int
+        self.detection_class = rospy.get_param('/moveit_python/detection') #str
+        self.test_world = rospy.get_param('/moveit_python/test') #str -->
+
+  
+ 
+</launch>
